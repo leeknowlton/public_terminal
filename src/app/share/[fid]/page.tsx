@@ -34,7 +34,7 @@ export async function generateMetadata({
   if (total) ogParams.set("total", total);
   if (timestamp) ogParams.set("timestamp", timestamp);
 
-  const ogImageUrl = `${APP_URL}/api/opengraph-image/transmission?${ogParams.toString()}`;
+  const ogImageUrl = `${APP_URL}/api/opengraph-image/mint?${ogParams.toString()}`;
   const shareUrl = `${APP_URL}/share/${tokenId}`;
 
   // Build title and description based on message
