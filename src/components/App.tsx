@@ -43,6 +43,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [mintedText, setMintedText] = useState<string | null>(null);
   const [mintedTokenId, setMintedTokenId] = useState<string | null>(null);
+  const [mintTimestamp, setMintTimestamp] = useState<string | null>(null);
   const [userColor, setUserColor] = useState<string>("#00FF00");
   const [feedKey, setFeedKey] = useState(0);
   const [debugSuccess, setDebugSuccess] = useState(false);
@@ -55,6 +56,7 @@ export default function App() {
         setDebugSuccess(true);
         setMintedText("This is a test transmission from the debug mode!");
         setMintedTokenId("42");
+        setMintTimestamp(new Date().toISOString().replace("T", " ").slice(0, 16).replace(/-/g, "."));
         console.log("Debug: Simulated successful mint");
       }
     };
@@ -65,6 +67,13 @@ export default function App() {
   const { data: txReceipt, isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash: txHash as `0x${string}` | undefined,
   });
+
+  // Capture timestamp when mint succeeds
+  useEffect(() => {
+    if (isSuccess && !mintTimestamp) {
+      setMintTimestamp(new Date().toISOString().replace("T", " ").slice(0, 16).replace(/-/g, "."));
+    }
+  }, [isSuccess, mintTimestamp]);
 
   // Get total message count for share image
   const { data: messageCount } = useReadContract({
@@ -269,67 +278,28 @@ export default function App() {
             <div className="px-6 space-y-6">
               {/* Success State */}
               {(isSuccess || debugSuccess) ? (
-                <div className="space-y-6">
-                  {/* Success header with token ID */}
-                  <div className="flex items-center justify-between">
-                    <p className="text-[var(--ansi-lime)] font-mono font-bold">
-                      TRANSMISSION COMPLETE
-                    </p>
-                    {mintedTokenId && (
-                      <p className="text-[var(--ansi-cyan)] font-mono text-xs">
-                        TX #{mintedTokenId}{messageCount ? ` of ${messageCount}` : ""}
-                      </p>
-                    )}
+                <div className="space-y-8 pt-24">
+                  {/* Token ID and timestamp */}
+                  <p className="font-mono text-xs text-terminal-system">
+                    #{mintedTokenId || "--"} [{mintTimestamp || "--"}]
+                  </p>
+
+                  {/* Message display - simple, no border */}
+                  <div className="font-mono text-base leading-relaxed">
+                    <span style={{ color: userColor }}>&lt;{username}&gt;</span>{" "}
+                    <span className="text-terminal-text">
+                      {mintedText || "Your message was minted!"}
+                    </span>
                   </div>
 
-                  {/* Show the minted message */}
-                  <div className="border border-terminal-system/30 p-4 bg-[var(--terminal-bg)] rounded">
-                    <div className="font-mono text-xs text-terminal-system mb-2">
-                      [{new Date().toISOString().replace("T", " ").slice(0, 19)}]
-                    </div>
-                    <div className="font-mono text-base leading-relaxed">
-                      <span style={{ color: userColor }}>&lt;{username}&gt;</span>{" "}
-                      <span className="text-terminal-text">
-                        {mintedText || "Your message was minted!"}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Share CTA */}
+                  {/* Share button - bordered style like Mint button */}
                   <button
+                    type="button"
                     onClick={handleShare}
-                    className="w-full py-4 bg-[var(--ansi-lime)] text-black font-mono font-bold text-lg rounded-lg hover:bg-[var(--ansi-cyan)] transition-colors"
+                    className="px-4 py-2 border border-[var(--ansi-lime)] text-[var(--ansi-lime)] font-mono text-sm hover:bg-[var(--ansi-lime)] hover:text-black transition-colors"
                   >
-                    SHARE YOUR TRANSMISSION
+                    share
                   </button>
-
-                  {/* New transmission */}
-                  <button
-                    onClick={() => {
-                      setTxHash(null);
-                      setMintedText(null);
-                      setMintedTokenId(null);
-                      setDebugSuccess(false);
-                    }}
-                    className="w-full text-terminal-system hover:text-terminal-text font-mono text-xs underline underline-offset-4"
-                  >
-                    [new transmission]
-                  </button>
-
-                  {/* What you received - collapsible details */}
-                  <details className="group">
-                    <summary className="text-terminal-system text-xs font-mono cursor-pointer hover:text-terminal-text">
-                      [what you received]
-                    </summary>
-                    <div className="mt-3 border border-terminal-system/30 p-4 space-y-2 rounded">
-                      <p className="text-terminal-text text-xs font-mono">
-                        1. <span className="text-[var(--ansi-cyan)]">Message Artifact</span> - Your permanent text on-chain
-                      </p>
-                      <p className="text-terminal-text text-xs font-mono">
-                        2. <span className="text-[var(--ansi-yellow)]">Feed View</span> - Dynamic view of the 15 most recent transmissions
-                      </p>
-                    </div>
-                  </details>
                 </div>
               ) : (
                 <>
@@ -427,6 +397,7 @@ export default function App() {
                 setTxHash(null);
                 setMintedText(null);
                 setMintedTokenId(null);
+                setMintTimestamp(null);
                 setDebugSuccess(false);
               }
             }}
