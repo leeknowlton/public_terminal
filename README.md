@@ -46,7 +46,7 @@ npm run dev
 NEXT_PUBLIC_URL=http://localhost:3000
 NEYNAR_API_KEY=your_neynar_api_key
 NEYNAR_CLIENT_ID=your_neynar_client_id
-SIGNER_PRIVATE_KEY=your_signer_private_key
+MINT_SIGNER_PRIVATE_KEY=your_mint_signer_private_key
 ```
 
 ## Contract
