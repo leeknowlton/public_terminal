@@ -1,0 +1,353 @@
+/**
+ * PUBLIC_TERMINAL DESIGN SYSTEM
+ *
+ * Terminal aesthetic: black background, monospace fonts, ANSI colors
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Terminal Colors */
+  --terminal-bg: #1a1a1a;
+  --terminal-text: #C0C0C0;
+  --terminal-system: #808080;
+  --terminal-header: #FFFFFF;
+  --terminal-border: #3a3a3a;
+  --terminal-input-bg: #1a1a1a;
+
+  /* Username green color from design */
+  --username-green: #00FF00;
+
+  /* ANSI Colors */
+  --ansi-red: #FF0000;
+  --ansi-lime: #00FF00;
+  --ansi-blue: #3B82F6;
+  --ansi-yellow: #FFFF00;
+  --ansi-magenta: #FF00FF;
+  --ansi-cyan: #00FFFF;
+  --ansi-orange: #FFA500;
+
+  /* Base */
+  --background: #1a1a1a;
+  --foreground: #C0C0C0;
+  --radius: 0.75rem;
+}
+
+body {
+  color: var(--terminal-text);
+  background: var(--terminal-bg);
+  font-family: 'Courier New', Courier, monospace;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--terminal-system) var(--terminal-bg);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--terminal-bg);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--terminal-system);
+  border-radius: 4px;
+}
+
+/* Selection styling */
+::selection {
+  background: var(--terminal-header);
+  color: var(--terminal-bg);
+}
+
+@layer components {
+  /* Terminal font utility */
+  .terminal-font {
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  /* Public_Terminal title */
+  .public-terminal-title {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    font-weight: normal;
+    color: var(--terminal-header);
+  }
+
+  /* Username green text */
+  .text-username-green {
+    color: var(--username-green);
+  }
+
+  /* Terminal text */
+  .text-terminal-text {
+    color: var(--terminal-text);
+  }
+
+  /* Navigation tabs - underlined style */
+  .nav-tab {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    color: var(--terminal-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+  }
+
+  .nav-tab:hover {
+    color: var(--terminal-header);
+  }
+
+  .nav-tab.active {
+    color: var(--terminal-header);
+  }
+
+  /* Message input box with border */
+  .message-input-box {
+    @apply p-4 cursor-text;
+    border: 1px solid var(--terminal-border);
+    min-height: 150px;
+    background: transparent;
+  }
+
+  .message-input-box:focus-within {
+    border-color: var(--terminal-system);
+  }
+
+  /* Blinking terminal cursor */
+  .terminal-cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.1em;
+    background-color: var(--terminal-text);
+    margin-left: 1px;
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+  }
+
+  /* Terminal container */
+  .terminal-container {
+    @apply min-h-screen p-4;
+    background: var(--terminal-bg);
+    color: var(--terminal-text);
+  }
+
+  /* Terminal card (message display) */
+  .terminal-card {
+    @apply rounded-xl border p-4;
+    background: var(--terminal-input-bg);
+    border-color: var(--terminal-border);
+  }
+
+  /* Terminal button - legacy */
+  .terminal-btn {
+    @apply px-6 py-2 font-bold uppercase tracking-wider transition-all rounded-lg;
+    font-family: 'Courier New', Courier, monospace;
+    background: var(--terminal-header);
+    color: var(--terminal-bg);
+    border: 2px solid var(--terminal-header);
+  }
+
+  .terminal-btn:hover:not(:disabled) {
+    background: transparent;
+    color: var(--terminal-header);
+  }
+
+  .terminal-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Message input container - rounded box from screenshot */
+  .message-input-container {
+    @apply rounded-2xl p-5 flex flex-col;
+    background: var(--terminal-input-bg);
+    border: 1px solid var(--terminal-border);
+    min-height: 280px;
+  }
+
+  .message-input-content {
+    @apply flex-1 flex flex-col;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .message-input-username {
+    color: var(--ansi-blue);
+    font-weight: normal;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .message-input-textarea {
+    @apply flex-1 w-full bg-transparent border-none resize-none;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    color: var(--terminal-text);
+    line-height: 1.5;
+    outline: none;
+  }
+
+  .message-input-textarea::placeholder {
+    color: var(--terminal-system);
+    opacity: 0.6;
+  }
+
+  /* Mint button - blue pill style from screenshot */
+  .mint-button {
+    @apply w-48 py-3 mx-auto mt-4 font-bold uppercase tracking-wider rounded-full;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    background: var(--ansi-blue);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .mint-button:hover:not(:disabled) {
+    filter: brightness(1.1);
+    transform: scale(1.02);
+  }
+
+  .mint-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Terminal input - legacy */
+  .terminal-input {
+    @apply w-full p-3 text-base rounded-xl;
+    font-family: 'Courier New', Courier, monospace;
+    background: var(--terminal-input-bg);
+    border: 1px solid var(--terminal-border);
+    color: var(--terminal-text);
+    resize: none;
+  }
+
+  .terminal-input:focus {
+    outline: none;
+    border-color: var(--terminal-header);
+  }
+
+  .terminal-input::placeholder {
+    color: var(--terminal-system);
+  }
+
+  /* Terminal text colors */
+  .text-terminal-header {
+    color: var(--terminal-header);
+  }
+
+  .text-terminal-system {
+    color: var(--terminal-system);
+  }
+
+  /* ANSI username colors */
+  .text-ansi-red { color: var(--ansi-red); }
+  .text-ansi-lime { color: var(--ansi-lime); }
+  .text-ansi-blue { color: var(--ansi-blue); }
+  .text-ansi-yellow { color: var(--ansi-yellow); }
+  .text-ansi-magenta { color: var(--ansi-magenta); }
+  .text-ansi-cyan { color: var(--ansi-cyan); }
+  .text-ansi-orange { color: var(--ansi-orange); }
+
+  /* Tab navigation */
+  .terminal-tab {
+    @apply px-4 py-2 text-sm uppercase tracking-wider;
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--terminal-system);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .terminal-tab:hover {
+    color: var(--terminal-text);
+  }
+
+  .terminal-tab.active {
+    color: var(--terminal-header);
+    border-bottom-color: var(--terminal-header);
+  }
+
+  /* ASCII art header styling */
+  .ascii-art {
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre;
+    line-height: 1.15;
+    color: var(--terminal-header);
+    font-size: 10px;
+    letter-spacing: -0.5px;
+  }
+
+  @media (min-width: 400px) {
+    .ascii-art {
+      font-size: 12px;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .ascii-art {
+      font-size: 14px;
+    }
+  }
+
+  /* Blinking cursor effect */
+  .cursor-blink::after {
+    content: '_';
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  /* Terminal loading animation */
+  .terminal-loading {
+    @apply inline-block;
+  }
+
+  .terminal-loading::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+  }
+
+  @keyframes dots {
+    0% { content: ''; }
+    25% { content: '.'; }
+    50% { content: '..'; }
+    75% { content: '...'; }
+    100% { content: ''; }
+  }
+
+  /* Message display */
+  .message-username {
+    font-weight: bold;
+  }
+
+  .message-text {
+    color: var(--terminal-text);
+    word-break: break-word;
+  }
+
+  .message-timestamp {
+    color: var(--terminal-system);
+    font-size: 0.75rem;
+  }
+
+  /* Divider line */
+  .terminal-divider {
+    border-color: var(--terminal-header);
+    opacity: 0.5;
+  }
+}
