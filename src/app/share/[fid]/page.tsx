@@ -6,8 +6,8 @@ import { getMiniAppEmbedMetadata } from "~/lib/utils";
 export const revalidate = 0;
 
 // Share page for Public_Terminal message artifacts
-// URL format: /share/[tokenId]?username=xxx&text=xxx&color=xxx&total=xxx
-// The OG image is generated dynamically to show the minted message
+// URL format: /share/[tokenId]?total=xxx
+// The OG image fetches feed context (surrounding messages) from the contract
 export async function generateMetadata({
   params,
   searchParams,
@@ -18,33 +18,19 @@ export async function generateMetadata({
   const { fid: tokenId } = await params;
   const queryParams = await searchParams;
 
-  // Extract message data from query params
-  const username = typeof queryParams.username === "string" ? queryParams.username : undefined;
-  const text = typeof queryParams.text === "string" ? queryParams.text : undefined;
-  const color = typeof queryParams.color === "string" ? queryParams.color : undefined;
   const total = typeof queryParams.total === "string" ? queryParams.total : undefined;
-  const timestamp = typeof queryParams.timestamp === "string" ? queryParams.timestamp : undefined;
 
-  // Build OG image URL with all available params
+  // Build OG image URL - endpoint fetches feed context from contract
   const ogParams = new URLSearchParams();
   ogParams.set("tokenId", tokenId);
-  if (username) ogParams.set("username", username);
-  if (text) ogParams.set("text", text);
-  if (color) ogParams.set("color", color);
   if (total) ogParams.set("total", total);
-  if (timestamp) ogParams.set("timestamp", timestamp);
 
   const ogImageUrl = `${APP_URL}/api/opengraph-image/mint?${ogParams.toString()}`;
   const shareUrl = `${APP_URL}/share/${tokenId}`;
 
-  // Build title and description based on message
-  const title = username
-    ? `${username} transmitted to PUBLIC_TERMINAL`
-    : "New transmission on PUBLIC_TERMINAL";
-
-  const description = text
-    ? `"${text.length > 100 ? text.slice(0, 100) + "..." : text}"`
-    : "A permanent on-chain text artifact. Join the conversation.";
+  // Generic title/description - actual content shown in OG image
+  const title = "Transmission on PUBLIC_TERMINAL";
+  const description = "A permanent on-chain text artifact. Join the conversation.";
 
   return {
     title,

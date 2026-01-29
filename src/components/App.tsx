@@ -55,7 +55,7 @@ export default function App() {
         e.preventDefault();
         setDebugSuccess(true);
         setMintedText("This is a test transmission from the debug mode!");
-        setMintedTokenId("42");
+        setMintedTokenId("1"); // Use tokenId 1 since it exists on contract
         setMintTimestamp(new Date().toISOString().replace("T", " ").slice(0, 16).replace(/-/g, "."));
         console.log("Debug: Simulated successful mint");
       }
@@ -229,11 +229,8 @@ export default function App() {
   };
 
   const handleShare = async () => {
-    // Build personalized share URL with all message data
+    // Build share URL - OG image fetches feed context from contract
     const shareParams = new URLSearchParams();
-    shareParams.set("username", username);
-    if (mintedText) shareParams.set("text", mintedText);
-    shareParams.set("color", userColor);
     if (messageCount) shareParams.set("total", messageCount.toString());
 
     const tokenId = mintedTokenId || "1";
@@ -278,9 +275,10 @@ export default function App() {
             <div className="px-6 space-y-6">
               {/* Success State */}
               {(isSuccess || debugSuccess) ? (
-                <div className="space-y-8 pt-24">
+                <div>
+                <div className="space-y-4 pt-24">
                   {/* Token ID and timestamp */}
-                  <p className="font-mono text-xs text-terminal-system">
+                  <p className="font-mono text-base text-terminal-text">
                     #{mintedTokenId || "--"} [{mintTimestamp || "--"}]
                   </p>
 
@@ -291,12 +289,18 @@ export default function App() {
                       {mintedText || "Your message was minted!"}
                     </span>
                   </div>
-
+                </div>
+                  {/* Share preview image - fetches feed context from contract */}
+                  <img
+                    src={`/api/opengraph-image/mint?tokenId=${mintedTokenId || "1"}&total=${messageCount || ""}`}
+                    alt="Share preview"
+                    className="mt-6 w-full border border-[var(--terminal-border)]"
+                  />
                   {/* Share button - bordered style like Mint button */}
                   <button
                     type="button"
                     onClick={handleShare}
-                    className="px-4 py-2 border border-[var(--ansi-lime)] text-[var(--ansi-lime)] font-mono text-sm hover:bg-[var(--ansi-lime)] hover:text-black transition-colors"
+                    className="mt-4 w-full px-4 py-2 border border-[var(--ansi-lime)] text-[var(--ansi-lime)] font-mono text-sm hover:bg-[var(--ansi-lime)] hover:text-black transition-colors"
                   >
                     share
                   </button>
