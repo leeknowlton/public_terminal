@@ -25,9 +25,13 @@ function ensureContrast(hexColor: string): string {
   if (isNaN(r) || isNaN(g) || isNaN(b)) {
     return "#00FF00";
   }
+  // If color is too dark (black or near-black), return default green
+  if (r < 10 && g < 10 && b < 10) {
+    return "#00FF00";
+  }
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   if (luminance < 0.15) {
-    const factor = luminance > 0 ? 0.4 / luminance : 3;
+    const factor = 0.4 / luminance;
     const newR = Math.min(255, Math.round(r * factor));
     const newG = Math.min(255, Math.round(g * factor));
     const newB = Math.min(255, Math.round(b * factor));
