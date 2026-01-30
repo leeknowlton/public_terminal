@@ -66,11 +66,12 @@ export async function GET(request: NextRequest) {
     const ids = [targetId - 1n, targetId, targetId + 1n].filter(id => id >= 1n);
 
     // Fetch messages in parallel using multicall
-    const results = await client.multicall({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const results = await (client as any).multicall({
       contracts: ids.map(id => ({
-        address: CONTRACT_ADDRESS as `0x${string}`,
+        address: CONTRACT_ADDRESS,
         abi: PUBLIC_TERMINAL_ABI,
-        functionName: "getMessage" as const,
+        functionName: "getMessage",
         args: [id],
       })),
       allowFailure: true,
@@ -217,7 +218,7 @@ export async function GET(request: NextRequest) {
             </div>
           </div>
         ),
-        { width: 1200, height: 630 }
+        { width: 1200, height: 800 }
       );
     }
   }

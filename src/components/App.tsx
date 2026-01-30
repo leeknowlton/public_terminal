@@ -55,7 +55,7 @@ export default function App() {
         e.preventDefault();
         setDebugSuccess(true);
         setMintedText("This is a test transmission from the debug mode!");
-        setMintedTokenId("1"); // Use tokenId 1 since it exists on contract
+        setMintedTokenId("2"); // Use tokenId 2 to test tagging previous poster (#1)
         setMintTimestamp(new Date().toISOString().replace("T", " ").slice(0, 16).replace(/-/g, "."));
         console.log("Debug: Simulated successful mint");
       }
@@ -236,6 +236,38 @@ export default function App() {
     const tokenId = mintedTokenId || "1";
     const shareUrl = `${window.location.origin}/share/${tokenId}?${shareParams.toString()}`;
 
+    // Fetch previous posters to tag them
+    let mentions = "";
+    try {
+      const targetId = BigInt(tokenId);
+      const prevIds = [targetId - 1n, targetId - 2n, targetId - 3n].filter(id => id >= 1n);
+
+      if (prevIds.length > 0 && publicClient) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const results = await (publicClient as any).multicall({
+          contracts: prevIds.map(id => ({
+            address: CONTRACT_ADDRESS,
+            abi: PUBLIC_TERMINAL_ABI,
+            functionName: "getMessage",
+            args: [id],
+          })),
+          allowFailure: true,
+        });
+
+        type MulticallResult = { status: string; result?: { username: string } };
+        const usernames = (results as MulticallResult[])
+          .filter((r: MulticallResult) => r.status === "success" && r.result)
+          .map((r: MulticallResult) => r.result!.username)
+          .filter((u: string) => u && u !== username); // Don't tag self
+
+        if (usernames.length > 0) {
+          mentions = " cc " + usernames.map((u: string) => `@${u}`).join(" ");
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch previous posters:", err);
+    }
+
     // Craft an engaging cast message
     const messagePreview = mintedText
       ? mintedText.length > 50
@@ -244,7 +276,7 @@ export default function App() {
       : "";
 
     const totalTx = messageCount ? ` (#${tokenId} of ${messageCount})` : "";
-    const castText = `${messagePreview}\n\nTransmission${totalTx} is now permanent on PUBLIC_TERMINAL`;
+    const castText = `${messagePreview}\n\nTransmission${totalTx} is now permanent on PUBLIC_TERMINAL${mentions}`;
 
     try {
       if (actions?.composeCast) {
