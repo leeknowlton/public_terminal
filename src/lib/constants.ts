@@ -65,7 +65,7 @@ export const APP_SPLASH_URL: string = `${APP_URL}/splash.png`;
  * Background color for the splash screen.
  * Used as fallback when splash image is loading.
  */
-export const APP_SPLASH_BACKGROUND_COLOR: string = "#000000";
+export const APP_SPLASH_BACKGROUND_COLOR: string = "#1a1a1a";
 
 /**
  * Account association for the mini app.
