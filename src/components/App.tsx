@@ -230,10 +230,12 @@ export default function App() {
 
   const handleShare = async () => {
     // Build share URL - OG image fetches feed context from contract
-    const shareParams = new URLSearchParams();
-    if (messageCount) shareParams.set("total", messageCount.toString());
-
     const tokenId = mintedTokenId || "1";
+    // Use the higher of messageCount or tokenId (in case messageCount is stale after mint)
+    const actualTotal = Math.max(Number(messageCount) || 0, Number(tokenId));
+
+    const shareParams = new URLSearchParams();
+    if (actualTotal) shareParams.set("total", actualTotal.toString());
     const shareUrl = `${window.location.origin}/share/${tokenId}?${shareParams.toString()}`;
 
     // Fetch previous posters to tag them
@@ -271,7 +273,7 @@ export default function App() {
     // Craft an engaging cast message
     const messagePreview = mintedText ? `"${mintedText}"` : "";
 
-    const totalTx = messageCount ? ` (#${tokenId} of ${messageCount})` : "";
+    const totalTx = actualTotal ? ` (#${tokenId} of ${actualTotal})` : "";
     const castText = `${messagePreview}\n\nTransmission${totalTx} is now permanent on PUBLIC_TERMINAL${mentions}`;
 
     try {
@@ -320,7 +322,7 @@ export default function App() {
                 </div>
                   {/* Share preview image - fetches feed context from contract, with fallback data */}
                   <img
-                    src={`/api/opengraph-image/mint?tokenId=${mintedTokenId || "1"}&total=${messageCount || ""}&username=${encodeURIComponent(username)}&text=${encodeURIComponent(mintedText || "")}&color=${encodeURIComponent(userColor)}&timestamp=${encodeURIComponent(mintTimestamp || "")}`}
+                    src={`/api/opengraph-image/mint?tokenId=${mintedTokenId || "1"}&total=${Math.max(Number(messageCount) || 0, Number(mintedTokenId) || 0)}&username=${encodeURIComponent(username)}&text=${encodeURIComponent(mintedText || "")}&color=${encodeURIComponent(userColor)}&timestamp=${encodeURIComponent(mintTimestamp || "")}`}
                     alt="Share preview"
                     className="mt-6 w-full border border-[var(--terminal-border)]"
                   />
