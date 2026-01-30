@@ -73,12 +73,10 @@ export const APP_SPLASH_BACKGROUND_COLOR: string = "#000000";
  * If not provided, the mini app will be unsigned and have limited capabilities.
  */
 export const APP_ACCOUNT_ASSOCIATION: AccountAssociation | undefined = {
-  header:
-    "eyJmaWQiOjQ0NjY5NywidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDgyYTY4YzM5NWM4MzVlNzJiMDYzMTFhRTY3ZjVBRjA3ZkI2YzQ2NTgifQ",
-  payload: "eyJkb21haW4iOiJ3ZWIzZGluZ3MudmVyY2VsLmFwcCJ9",
-  signature:
-    "oDMjS0tsryqLeII4/vKXLFlogdRmQkR7Uhy2BSnTgtR34KYDBBw/oVmjvOFWvF9vFK8IcBy6a6WjxQkmsqojsBw=",
-};
+      "header": "eyJmaWQiOjQ0NjY5NywidHlwZSI6ImF1dGgiLCJrZXkiOiIweDkwMTI1RjllNTE1NWY0OTY1QTI0MjlEOWE0YjQwMjgzMzQxRDVCYTIifQ",
+      "payload": "eyJkb21haW4iOiJwdWJsaWMtdGVybWluYWwudmVyY2VsLmFwcCJ9",
+      "signature": "mId+540jDf4G0Tl1AvgvXYyKXNL7fdxdx4RBrzlI2R4qKT2qtbRx8IcYlEHwFJbdJZwFFEb5ohkr6UeM/ni1Yxs="
+  };
 
 export const BASEBUILDER: { ownerAddress: string } | undefined = {
   ownerAddress: "0xd0a276B60027aE2d261671DA9CBeD8d9867E3D6F",
