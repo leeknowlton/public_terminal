@@ -195,8 +195,8 @@ export const PUBLIC_TERMINAL_ABI = [
   },
 ] as const;
 
-// Contract address on Base Sepolia (v4 with fixed word wrapping)
-export const CONTRACT_ADDRESS = "0x3748cE0E2d27e853C8507A2e3fc4036EA08C4f8A";
+// Contract address on Base Sepolia (v5 with fixed black username color)
+export const CONTRACT_ADDRESS = "0xF9a89301ecc009f1D6d769Af4D18deb67D761ad6";
 
 // Price: 0.001 ETH
 export const PRICE_WEI = 1000000000000000n;
