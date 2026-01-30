@@ -64,6 +64,12 @@ export async function GET(request: NextRequest) {
   const tokenId = searchParams.get("tokenId");
   const total = searchParams.get("total");
 
+  // Fallback data passed from client (for when blockchain hasn't propagated yet)
+  const fallbackUsername = searchParams.get("username");
+  const fallbackText = searchParams.get("text");
+  const fallbackColor = searchParams.get("color");
+  const fallbackTimestamp = searchParams.get("timestamp");
+
   // If we have a tokenId, fetch surrounding messages for feed context
   if (tokenId) {
     const targetId = BigInt(tokenId);
@@ -95,6 +101,17 @@ export async function GET(request: NextRequest) {
           timestamp: formatTimestamp(msg.timestamp),
         });
       }
+    }
+
+    // If target message not found in contract, use fallback data from client
+    if (!feedMessages.some(m => m.id === targetId) && fallbackUsername && fallbackText) {
+      feedMessages.push({
+        id: targetId,
+        username: fallbackUsername,
+        text: fallbackText,
+        color: ensureContrast(fallbackColor || "#00FF00"),
+        timestamp: fallbackTimestamp || new Date().toISOString().replace("T", " ").slice(0, 16).replace(/-/g, "."),
+      });
     }
 
     // Sort by ID ascending

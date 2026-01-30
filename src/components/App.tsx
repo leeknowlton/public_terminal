@@ -269,11 +269,7 @@ export default function App() {
     }
 
     // Craft an engaging cast message
-    const messagePreview = mintedText
-      ? mintedText.length > 50
-        ? `"${mintedText.slice(0, 50)}..."`
-        : `"${mintedText}"`
-      : "";
+    const messagePreview = mintedText ? `"${mintedText}"` : "";
 
     const totalTx = messageCount ? ` (#${tokenId} of ${messageCount})` : "";
     const castText = `${messagePreview}\n\nTransmission${totalTx} is now permanent on PUBLIC_TERMINAL${mentions}`;
@@ -322,9 +318,9 @@ export default function App() {
                     </span>
                   </div>
                 </div>
-                  {/* Share preview image - fetches feed context from contract */}
+                  {/* Share preview image - fetches feed context from contract, with fallback data */}
                   <img
-                    src={`/api/opengraph-image/mint?tokenId=${mintedTokenId || "1"}&total=${messageCount || ""}`}
+                    src={`/api/opengraph-image/mint?tokenId=${mintedTokenId || "1"}&total=${messageCount || ""}&username=${encodeURIComponent(username)}&text=${encodeURIComponent(mintedText || "")}&color=${encodeURIComponent(userColor)}&timestamp=${encodeURIComponent(mintTimestamp || "")}`}
                     alt="Share preview"
                     className="mt-6 w-full border border-[var(--terminal-border)]"
                   />
