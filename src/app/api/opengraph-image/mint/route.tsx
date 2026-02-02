@@ -73,7 +73,12 @@ export async function GET(request: NextRequest) {
   // If we have a tokenId, fetch surrounding messages for feed context
   if (tokenId) {
     const targetId = BigInt(tokenId);
-    const ids = [targetId - 1n, targetId, targetId + 1n].filter(id => id >= 1n);
+    // Fetch 7 messages: 3 before, target, 3 after
+    const ids = [
+      targetId - 3n, targetId - 2n, targetId - 1n,
+      targetId,
+      targetId + 1n, targetId + 2n, targetId + 3n
+    ].filter(id => id >= 1n);
 
     // Fetch messages in parallel using multicall
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -128,7 +133,7 @@ export async function GET(request: NextRequest) {
               width: "100%",
               height: "100%",
               backgroundColor: "#1a1a1a",
-              padding: "40px 50px",
+              padding: "30px 40px",
               fontFamily: "monospace",
             }}
           >
@@ -138,14 +143,14 @@ export async function GET(request: NextRequest) {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: 30,
+                marginBottom: 24,
               }}
             >
               <div
                 style={{
                   display: "flex",
                   color: "#FFFFFF",
-                  fontSize: 28,
+                  fontSize: 36,
                   fontWeight: "bold",
                   fontStyle: "italic",
                 }}
@@ -157,7 +162,7 @@ export async function GET(request: NextRequest) {
                   style={{
                     display: "flex",
                     color: "#808080",
-                    fontSize: 20,
+                    fontSize: 24,
                   }}
                 >
                   {`#${tokenId} of ${total}`}
@@ -170,11 +175,12 @@ export async function GET(request: NextRequest) {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 16,
+                gap: 8,
                 flex: 1,
+                overflow: "hidden",
               }}
             >
-              {feedMessages.map((msg) => {
+              {feedMessages.slice(0, 7).map((msg) => {
                 const isHighlighted = msg.id === targetId;
                 return (
                   <div
@@ -183,29 +189,18 @@ export async function GET(request: NextRequest) {
                       display: "flex",
                       flexDirection: "column",
                       opacity: isHighlighted ? 1 : 0.5,
-                      borderLeft: isHighlighted ? "3px solid #00FF00" : "3px solid transparent",
-                      paddingLeft: 16,
-                      paddingTop: 8,
-                      paddingBottom: 8,
+                      borderLeft: isHighlighted ? "4px solid #00FF00" : "4px solid transparent",
+                      paddingLeft: 12,
+                      paddingTop: 4,
+                      paddingBottom: 4,
                     }}
                   >
-                    {/* ID and timestamp */}
-                    <div
-                      style={{
-                        display: "flex",
-                        color: isHighlighted ? "#00FFFF" : "#808080",
-                        fontSize: 16,
-                        marginBottom: 4,
-                      }}
-                    >
-                      {`#${msg.id.toString()} [${msg.timestamp}]`}
-                    </div>
-                    {/* Username and message */}
-                    <div style={{ display: "flex", flexWrap: "wrap", maxWidth: "1050px" }}>
+                    {/* Username and message on same line */}
+                    <div style={{ display: "flex", flexWrap: "wrap", maxWidth: "1100px" }}>
                       <span
                         style={{
                           color: msg.color,
-                          fontSize: 20,
+                          fontSize: 28,
                           fontWeight: "bold",
                         }}
                       >
@@ -214,11 +209,11 @@ export async function GET(request: NextRequest) {
                       <span
                         style={{
                           color: isHighlighted ? "#E0E0E0" : "#A0A0A0",
-                          fontSize: 20,
-                          marginLeft: 8,
+                          fontSize: 28,
+                          marginLeft: 10,
                         }}
                       >
-                        {msg.text.length > 100 ? msg.text.slice(0, 100) + "..." : msg.text}
+                        {msg.text.length > 80 ? msg.text.slice(0, 80) + "..." : msg.text}
                       </span>
                     </div>
                   </div>
@@ -231,8 +226,8 @@ export async function GET(request: NextRequest) {
               style={{
                 display: "flex",
                 color: "#808080",
-                fontSize: 16,
-                marginTop: 20,
+                fontSize: 20,
+                marginTop: 16,
               }}
             >
               Permanent on-chain transmissions on Base

@@ -18,13 +18,13 @@ export default function FeedView({ count = 15, compact = false, showRefresh = tr
     args: [BigInt(count)],
   });
 
-  const { data: stickyMessage } = useReadContract({
+  const { data: pinnedMessage } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: PUBLIC_TERMINAL_ABI,
     functionName: "getStickyMessage",
   });
 
-  const sticky = stickyMessage as Message | undefined;
+  const pinned = pinnedMessage as Message | undefined;
 
   if (isLoading) {
     return (
@@ -71,13 +71,13 @@ export default function FeedView({ count = 15, compact = false, showRefresh = tr
         </div>
       )}
 
-      {/* Sticky message */}
-      {sticky && sticky.id > 0n && (
+      {/* Pinned message */}
+      {pinned && pinned.id > 0n && (
         <div className="mb-4 border-2 border-[var(--ansi-yellow)] p-1">
           <div className="text-[var(--ansi-yellow)] text-[10px] font-mono uppercase tracking-wider mb-1">
             Pinned
           </div>
-          <MessageCard message={sticky} compact={compact} />
+          <MessageCard message={pinned} compact={compact} />
         </div>
       )}
 

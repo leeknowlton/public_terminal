@@ -12,7 +12,7 @@ import {
   useConnect,
 } from "wagmi";
 import { decodeEventLog } from "viem";
-import { PUBLIC_TERMINAL_ABI, CONTRACT_ADDRESS, PRICE_WEI, STICKY_PRICE_WEI } from "~/lib/contractABI";
+import { PUBLIC_TERMINAL_ABI, CONTRACT_ADDRESS, PRICE_WEI, PIN_PRICE_WEI } from "~/lib/contractABI";
 import { AsciiHeader, MessageInput, FeedView, MyArtifacts, BotsView } from "./terminal";
 
 // View tabs
@@ -128,7 +128,7 @@ export default function App() {
   const fid = context?.user?.fid || 0;
   const isOnCorrectChain = chainId === BASE_CHAIN_ID;
 
-  const handleMint = async (text: string, isSticky: boolean = false) => {
+  const handleMint = async (text: string, isPinned: boolean = false) => {
     if (!isConnected || !address) {
       setError("Please connect your wallet first");
       return;
@@ -154,8 +154,8 @@ export default function App() {
     setTxHash(null);
     setMintedText(text);
 
-    const mintPrice = isSticky ? STICKY_PRICE_WEI : PRICE_WEI;
-    const mintFunction = isSticky ? "mintSticky" : "mint";
+    const mintPrice = isPinned ? PIN_PRICE_WEI : PRICE_WEI;
+    const mintFunction = isPinned ? "mintSticky" : "mint";
 
     try {
       // Get signature from backend
@@ -195,7 +195,7 @@ export default function App() {
         console.error("Simulation failed:", simError);
         if (simError instanceof Error) {
           if (simError.message.includes("InsufficientPayment")) {
-            const priceStr = isSticky ? "0.005" : "0.0005";
+            const priceStr = isPinned ? "0.005" : "0.0005";
             throw new Error(`Insufficient funds. You need ${priceStr} ETH to mint.`);
           } else if (simError.message.includes("MessageTooLong")) {
             throw new Error("Message too long. Max 120 characters.");

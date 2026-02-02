@@ -5,7 +5,7 @@ import { MAX_MESSAGE_LENGTH } from "~/lib/contractABI";
 
 interface MessageInputProps {
   username: string;
-  onSubmit: (text: string, isSticky: boolean) => void;
+  onSubmit: (text: string, isPinned: boolean) => void;
   disabled?: boolean;
   isLoading?: boolean;
 }
@@ -19,13 +19,13 @@ export default function MessageInput({
   const [text, setText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [cursorPos, setCursorPos] = useState(0);
-  const [isSticky, setIsSticky] = useState(false);
-  const [showStickyInfo, setShowStickyInfo] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
+  const [showPinInfo, setShowPinInfo] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = () => {
     if (text.trim() && !disabled && !isLoading) {
-      onSubmit(text.trim(), isSticky);
+      onSubmit(text.trim(), isPinned);
     }
   };
 
@@ -128,31 +128,31 @@ export default function MessageInput({
         )}
       </div>
 
-      {/* Sticky toggle */}
+      {/* Pin toggle */}
       <div className="flex items-center gap-2">
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
-            checked={isSticky}
-            onChange={(e) => setIsSticky(e.target.checked)}
+            checked={isPinned}
+            onChange={(e) => setIsPinned(e.target.checked)}
             disabled={disabled || isLoading}
             className="w-4 h-4 accent-[var(--ansi-yellow)]"
           />
-          <span className={`font-mono text-xs ${isSticky ? "text-[var(--ansi-yellow)]" : "text-terminal-system"}`}>
-            Sticky (0.005 ETH)
+          <span className={`font-mono text-xs ${isPinned ? "text-[var(--ansi-yellow)]" : "text-terminal-system"}`}>
+            Pin (0.005 ETH)
           </span>
         </label>
         <button
           type="button"
-          onClick={() => setShowStickyInfo(!showStickyInfo)}
+          onClick={() => setShowPinInfo(!showPinInfo)}
           className="w-4 h-4 rounded-full border border-terminal-system text-terminal-system text-[10px] font-mono hover:border-terminal-text hover:text-terminal-text flex items-center justify-center"
         >
           i
         </button>
       </div>
-      {showStickyInfo && (
+      {showPinInfo && (
         <div className="text-terminal-system text-xs font-mono border border-terminal-border p-2 bg-black/30">
-          Sticky messages are pinned to the top of the feed until someone else posts a new sticky. When displaced, your message becomes a regular transmission in the feed.
+          Pinned messages stay at the top of the feed until someone else pins a new message. When displaced, your message becomes a regular transmission in the feed.
         </div>
       )}
 

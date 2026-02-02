@@ -246,8 +246,8 @@ export const CONTRACT_ADDRESS = "0x1C89997a8643A8E380305F0078BB8210e3952e1C";
 // Price: 0.0005 ETH
 export const PRICE_WEI = 500000000000000n;
 
-// Sticky price: 0.005 ETH (10x regular)
-export const STICKY_PRICE_WEI = 5000000000000000n;
+// Pin price: 0.005 ETH (10x regular)
+export const PIN_PRICE_WEI = 5000000000000000n;
 
 // Constants matching contract
 export const MAX_MESSAGE_LENGTH = 120;
