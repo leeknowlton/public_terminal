@@ -1,13 +1,13 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import { createPublicClient, http } from "viem";
-import { baseSepolia } from "viem/chains";
+import { base } from "viem/chains";
 import { PUBLIC_TERMINAL_ABI, CONTRACT_ADDRESS, type Message } from "~/lib/contractABI";
 
 export const dynamic = "force-dynamic";
 
 const client = createPublicClient({
-  chain: baseSepolia,
+  chain: base,
   transport: http(),
 });
 
@@ -200,7 +200,7 @@ export async function GET(request: NextRequest) {
                       <span
                         style={{
                           color: msg.color,
-                          fontSize: 28,
+                          fontSize: 36,
                           fontWeight: "bold",
                         }}
                       >
@@ -209,11 +209,11 @@ export async function GET(request: NextRequest) {
                       <span
                         style={{
                           color: isHighlighted ? "#E0E0E0" : "#A0A0A0",
-                          fontSize: 28,
+                          fontSize: 36,
                           marginLeft: 10,
                         }}
                       >
-                        {msg.text.length > 80 ? msg.text.slice(0, 80) + "..." : msg.text}
+                        {msg.text.length > 70 ? msg.text.slice(0, 70) + "..." : msg.text}
                       </span>
                     </div>
                   </div>
