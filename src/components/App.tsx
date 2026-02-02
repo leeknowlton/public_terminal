@@ -11,7 +11,7 @@ import {
   useReadContract,
 } from "wagmi";
 import { decodeEventLog } from "viem";
-import { PUBLIC_TERMINAL_ABI, CONTRACT_ADDRESS, PRICE_WEI } from "~/lib/contractABI";
+import { PUBLIC_TERMINAL_ABI, CONTRACT_ADDRESS, PRICE_WEI, STICKY_PRICE_WEI } from "~/lib/contractABI";
 import { AsciiHeader, MessageInput, FeedView, MyArtifacts, BotsView } from "./terminal";
 
 // View tabs
@@ -126,7 +126,7 @@ export default function App() {
   const fid = context?.user?.fid || 0;
   const isOnCorrectChain = chainId === BASE_CHAIN_ID;
 
-  const handleMint = async (text: string) => {
+  const handleMint = async (text: string, isSticky: boolean = false) => {
     if (!isConnected || !address) {
       setError("Please connect your wallet first");
       return;
@@ -152,6 +152,9 @@ export default function App() {
     setTxHash(null);
     setMintedText(text);
 
+    const mintPrice = isSticky ? STICKY_PRICE_WEI : PRICE_WEI;
+    const mintFunction = isSticky ? "mintSticky" : "mint";
+
     try {
       // Get signature from backend
       console.log("Requesting signature...");
@@ -176,23 +179,24 @@ export default function App() {
       console.log("Signature obtained");
 
       // Simulate transaction
-      console.log("Simulating transaction...");
+      console.log(`Simulating ${mintFunction} transaction...`);
       try {
         await publicClient?.simulateContract({
           address: CONTRACT_ADDRESS as `0x${string}`,
           abi: PUBLIC_TERMINAL_ABI,
-          functionName: "mint",
+          functionName: mintFunction,
           args: [BigInt(fid), username, text, signature as `0x${string}`],
           account: address as `0x${string}`,
-          value: PRICE_WEI,
+          value: mintPrice,
         });
       } catch (simError: unknown) {
         console.error("Simulation failed:", simError);
         if (simError instanceof Error) {
           if (simError.message.includes("InsufficientPayment")) {
-            throw new Error("Insufficient funds. You need 0.0005 ETH to mint.");
+            const priceStr = isSticky ? "0.005" : "0.0005";
+            throw new Error(`Insufficient funds. You need ${priceStr} ETH to mint.`);
           } else if (simError.message.includes("MessageTooLong")) {
-            throw new Error("Message too long. Max 280 characters.");
+            throw new Error("Message too long. Max 120 characters.");
           } else if (simError.message.includes("InvalidSignature")) {
             throw new Error("Signature verification failed. Please try again.");
           }
@@ -201,13 +205,13 @@ export default function App() {
       }
 
       // Submit transaction
-      console.log("Submitting transaction...");
+      console.log(`Submitting ${mintFunction} transaction...`);
       const hash = await writeContractAsync({
         address: CONTRACT_ADDRESS as `0x${string}`,
         abi: PUBLIC_TERMINAL_ABI,
-        functionName: "mint",
+        functionName: mintFunction,
         args: [BigInt(fid), username, text, signature as `0x${string}`],
-        value: PRICE_WEI,
+        value: mintPrice,
         chainId: BASE_CHAIN_ID,
       });
 

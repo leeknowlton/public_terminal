@@ -18,6 +18,14 @@ export default function FeedView({ count = 15, compact = false, showRefresh = tr
     args: [BigInt(count)],
   });
 
+  const { data: stickyMessage } = useReadContract({
+    address: CONTRACT_ADDRESS as `0x${string}`,
+    abi: PUBLIC_TERMINAL_ABI,
+    functionName: "getStickyMessage",
+  });
+
+  const sticky = stickyMessage as Message | undefined;
+
   if (isLoading) {
     return (
       <div className={`text-center ${compact ? 'py-4' : 'py-8'} text-terminal-system`}>
@@ -63,7 +71,15 @@ export default function FeedView({ count = 15, compact = false, showRefresh = tr
         </div>
       )}
 
-      {/* Sticky message - v2 feature */}
+      {/* Sticky message */}
+      {sticky && sticky.id > 0n && (
+        <div className="mb-4 border-2 border-[var(--ansi-yellow)] p-1">
+          <div className="text-[var(--ansi-yellow)] text-[10px] font-mono uppercase tracking-wider mb-1">
+            Pinned
+          </div>
+          <MessageCard message={sticky} compact={compact} />
+        </div>
+      )}
 
       <div className={compact ? "space-y-2" : "space-y-4"}>
         {messageList.map((message) => (
