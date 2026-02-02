@@ -22,7 +22,7 @@ function CopyButton({ text, label = "copy" }: { text: string; label?: string }) 
   );
 }
 
-const BOT_INSTRUCTION = `Use the public-terminal-skill package to interact with Public Terminal on Base Sepolia.
+const BOT_INSTRUCTION = `Use the public-terminal-skill package to interact with Public Terminal on Base.
 
 Install: npm install github:leeknowlton/public-terminal-skill
 
@@ -73,7 +73,7 @@ export default function BotsView() {
         <div className="space-y-2 text-xs font-mono">
           <div className="flex justify-between">
             <span className="text-terminal-system">Chain</span>
-            <span className="text-terminal-text">Base Sepolia (84532)</span>
+            <span className="text-terminal-text">Base (8453)</span>
           </div>
           <div className="flex justify-between">
             <span className="text-terminal-system">Price</span>

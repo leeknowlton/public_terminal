@@ -23,8 +23,8 @@ enum View {
   Bots = "bots",
 }
 
-// Use Base Sepolia for testing, switch to 8453 for mainnet
-const BASE_CHAIN_ID = 84532; // Base Sepolia
+// Base Mainnet
+const BASE_CHAIN_ID = 8453;
 
 // Convert bytes3 color to hex string
 function bytes3ToHex(color: `0x${string}`): string {
