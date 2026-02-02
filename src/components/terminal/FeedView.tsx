@@ -54,6 +54,8 @@ export default function FeedView({ count = 15, compact = false, showRefresh = tr
   }
 
   const messageList = messages as Message[] | undefined;
+  const sticky = stickyMessage as Message | undefined;
+  const hasSticky = sticky && sticky.id > 0n;
 
   if (!messageList || messageList.length === 0) {
     return (
@@ -77,20 +79,20 @@ export default function FeedView({ count = 15, compact = false, showRefresh = tr
       )}
 
       {/* Sticky message at top */}
-      {stickyMessage && (stickyMessage as Message).id > 0n && (
+      {hasSticky && (
         <div className="border border-yellow-500/30 bg-yellow-500/5 rounded mb-4 p-3">
           <div className="text-xs text-yellow-500 font-mono mb-2 uppercase tracking-wider">Pinned</div>
           <div className="font-mono text-xs">
-            <span className="text-terminal-system">#{(stickyMessage as Message).id.toString()}</span>
+            <span className="text-terminal-system">#{sticky.id.toString()}</span>
             <span className="text-terminal-system ml-2">
-              [{new Date(Number((stickyMessage as Message).timestamp) * 1000).toISOString().replace("T", " ").slice(0, 16).replace(/-/g, ".")}]
+              [{new Date(Number(sticky.timestamp) * 1000).toISOString().replace("T", " ").slice(0, 16).replace(/-/g, ".")}]
             </span>
           </div>
           <div className="font-mono text-xs mt-1">
-            <span style={{ color: bytes3ToHex((stickyMessage as Message).usernameColor) }}>
-              &lt;{(stickyMessage as Message).username}&gt;
+            <span style={{ color: bytes3ToHex(sticky.usernameColor) }}>
+              &lt;{sticky.username}&gt;
             </span>{" "}
-            <span className="text-terminal-text">{(stickyMessage as Message).text}</span>
+            <span className="text-terminal-text">{sticky.text}</span>
           </div>
         </div>
       )}
