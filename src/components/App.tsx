@@ -9,6 +9,7 @@ import {
   useSwitchChain,
   usePublicClient,
   useReadContract,
+  useConnect,
 } from "wagmi";
 import { decodeEventLog } from "viem";
 import { PUBLIC_TERMINAL_ABI, CONTRACT_ADDRESS, PRICE_WEI, STICKY_PRICE_WEI } from "~/lib/contractABI";
@@ -34,6 +35,7 @@ function bytes3ToHex(color: `0x${string}`): string {
 export default function App() {
   const { actions, context } = useMiniApp();
   const { address, isConnected, chainId } = useAccount();
+  const { connect, connectors } = useConnect();
   const { writeContractAsync } = useWriteContract();
   const { switchChainAsync } = useSwitchChain();
   const publicClient = usePublicClient();
@@ -383,9 +385,15 @@ export default function App() {
 
                       {/* Wallet Status */}
                       {!isConnected && (
-                        <p className="text-[var(--ansi-yellow)] text-xs font-mono">
+                        <button
+                          onClick={() => {
+                            const connector = connectors[0];
+                            if (connector) connect({ connector });
+                          }}
+                          className="text-[var(--ansi-yellow)] text-xs font-mono underline hover:text-[var(--ansi-lime)]"
+                        >
                           Connect your wallet to transmit
-                        </p>
+                        </button>
                       )}
 
                       {isConnected && !isOnCorrectChain && (
