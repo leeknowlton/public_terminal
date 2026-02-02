@@ -12,13 +12,14 @@ import {
 } from "wagmi";
 import { decodeEventLog } from "viem";
 import { PUBLIC_TERMINAL_ABI, CONTRACT_ADDRESS, PRICE_WEI } from "~/lib/contractABI";
-import { AsciiHeader, MessageInput, FeedView, MyArtifacts } from "./terminal";
+import { AsciiHeader, MessageInput, FeedView, MyArtifacts, BotsView } from "./terminal";
 
 // View tabs
 enum View {
   Mint = "mint",
   Feed = "feed",
   MyMints = "my",
+  Bots = "bots",
 }
 
 // Use Base Sepolia for testing, switch to 8453 for mainnet
@@ -418,6 +419,12 @@ export default function App() {
             <MyArtifacts fid={fid} address={address} />
           </div>
         )}
+
+        {currentView === View.Bots && (
+          <div className="px-6">
+            <BotsView />
+          </div>
+        )}
       </div>
 
       {/* Bottom Tab Navigation - Fixed */}
@@ -450,6 +457,12 @@ export default function App() {
             className={`nav-tab ${currentView === View.MyMints ? "active" : ""}`}
           >
             Artifacts
+          </button>
+          <button
+            onClick={() => setCurrentView(View.Bots)}
+            className={`nav-tab ${currentView === View.Bots ? "active" : ""}`}
+          >
+            Bots
           </button>
         </div>
       </div>
