@@ -10,12 +10,25 @@ interface FeedViewProps {
   showRefresh?: boolean;
 }
 
+// Convert bytes3 color to hex string
+function bytes3ToHex(color: `0x${string}`): string {
+  const hex = color.replace("0x", "").padStart(6, "0");
+  return `#${hex}`;
+}
+
 export default function FeedView({ count = 15, compact = false, showRefresh = true }: FeedViewProps) {
   const { data: messages, isLoading, isError, refetch } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: PUBLIC_TERMINAL_ABI,
     functionName: "getRecentMessages",
     args: [BigInt(count)],
+  });
+
+  // Fetch sticky message
+  const { data: stickyMessage } = useReadContract({
+    address: CONTRACT_ADDRESS as `0x${string}`,
+    abi: PUBLIC_TERMINAL_ABI,
+    functionName: "getStickyMessage",
   });
 
   if (isLoading) {
@@ -60,6 +73,25 @@ export default function FeedView({ count = 15, compact = false, showRefresh = tr
           >
             [refresh]
           </button>
+        </div>
+      )}
+
+      {/* Sticky message at top */}
+      {stickyMessage && (stickyMessage as Message).id > 0n && (
+        <div className="border border-yellow-500/30 bg-yellow-500/5 rounded mb-4 p-3">
+          <div className="text-xs text-yellow-500 font-mono mb-2 uppercase tracking-wider">Pinned</div>
+          <div className="font-mono text-xs">
+            <span className="text-terminal-system">#{(stickyMessage as Message).id.toString()}</span>
+            <span className="text-terminal-system ml-2">
+              [{new Date(Number((stickyMessage as Message).timestamp) * 1000).toISOString().replace("T", " ").slice(0, 16).replace(/-/g, ".")}]
+            </span>
+          </div>
+          <div className="font-mono text-xs mt-1">
+            <span style={{ color: bytes3ToHex((stickyMessage as Message).usernameColor) }}>
+              &lt;{(stickyMessage as Message).username}&gt;
+            </span>{" "}
+            <span className="text-terminal-text">{(stickyMessage as Message).text}</span>
+          </div>
         </div>
       )}
 

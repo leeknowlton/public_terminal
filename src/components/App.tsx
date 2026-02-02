@@ -11,7 +11,7 @@ import {
   useReadContract,
 } from "wagmi";
 import { decodeEventLog } from "viem";
-import { PUBLIC_TERMINAL_ABI, CONTRACT_ADDRESS, PRICE_WEI } from "~/lib/contractABI";
+import { PUBLIC_TERMINAL_ABI, CONTRACT_ADDRESS, PRICE_WEI, STICKY_PRICE_WEI } from "~/lib/contractABI";
 import { AsciiHeader, MessageInput, FeedView, MyArtifacts } from "./terminal";
 
 // View tabs
@@ -125,7 +125,7 @@ export default function App() {
   const fid = context?.user?.fid || 0;
   const isOnCorrectChain = chainId === BASE_CHAIN_ID;
 
-  const handleMint = async (text: string) => {
+  const handleMint = async (text: string, isSticky: boolean = false) => {
     if (!isConnected || !address) {
       setError("Please connect your wallet first");
       return;
@@ -175,21 +175,24 @@ export default function App() {
       console.log("Signature obtained");
 
       // Simulate transaction
-      console.log("Simulating transaction...");
+      const functionName = isSticky ? "mintSticky" : "mint";
+      const value = isSticky ? STICKY_PRICE_WEI : PRICE_WEI;
+      console.log(`Simulating ${functionName} transaction...`);
       try {
         await publicClient?.simulateContract({
           address: CONTRACT_ADDRESS as `0x${string}`,
           abi: PUBLIC_TERMINAL_ABI,
-          functionName: "mint",
+          functionName,
           args: [BigInt(fid), username, text, signature as `0x${string}`],
           account: address as `0x${string}`,
-          value: PRICE_WEI,
+          value,
         });
       } catch (simError: unknown) {
         console.error("Simulation failed:", simError);
         if (simError instanceof Error) {
           if (simError.message.includes("InsufficientPayment")) {
-            throw new Error("Insufficient funds. You need 0.001 ETH to mint.");
+            const requiredAmount = isSticky ? "0.005" : "0.0005";
+            throw new Error(`Insufficient funds. You need ${requiredAmount} ETH to ${isSticky ? "mint sticky" : "mint"}.`);
           } else if (simError.message.includes("MessageTooLong")) {
             throw new Error("Message too long. Max 280 characters.");
           } else if (simError.message.includes("InvalidSignature")) {
@@ -200,13 +203,13 @@ export default function App() {
       }
 
       // Submit transaction
-      console.log("Submitting transaction...");
+      console.log(`Submitting ${functionName} transaction...`);
       const hash = await writeContractAsync({
         address: CONTRACT_ADDRESS as `0x${string}`,
         abi: PUBLIC_TERMINAL_ABI,
-        functionName: "mint",
+        functionName,
         args: [BigInt(fid), username, text, signature as `0x${string}`],
-        value: PRICE_WEI,
+        value,
         chainId: BASE_CHAIN_ID,
       });
 

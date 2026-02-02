@@ -55,6 +55,20 @@ export const PUBLIC_TERMINAL_ABI = [
     stateMutability: "payable",
   },
 
+  // Sticky mint function
+  {
+    type: "function",
+    name: "mintSticky",
+    inputs: [
+      { name: "fid", type: "uint256" },
+      { name: "username", type: "string" },
+      { name: "text", type: "string" },
+      { name: "signature", type: "bytes" },
+    ],
+    outputs: [],
+    stateMutability: "payable",
+  },
+
   // View functions
   {
     type: "function",
@@ -103,6 +117,27 @@ export const PUBLIC_TERMINAL_ABI = [
     name: "getMessageCount",
     inputs: [],
     outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getStickyMessage",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "tuple",
+        components: [
+          { name: "id", type: "uint256" },
+          { name: "author", type: "address" },
+          { name: "fid", type: "uint256" },
+          { name: "username", type: "string" },
+          { name: "text", type: "string" },
+          { name: "timestamp", type: "uint256" },
+          { name: "usernameColor", type: "bytes3" },
+        ],
+      },
+    ],
     stateMutability: "view",
   },
   {
@@ -193,13 +228,25 @@ export const PUBLIC_TERMINAL_ABI = [
       { name: "_toTokenId", type: "uint256", indexed: false },
     ],
   },
+  // Sticky message event
+  {
+    type: "event",
+    name: "StickySet",
+    inputs: [
+      { name: "tokenId", type: "uint256", indexed: true },
+      { name: "previousTokenId", type: "uint256", indexed: true },
+    ],
+  },
 ] as const;
 
-// Contract address on Base Sepolia (v5 with fixed black username color)
-export const CONTRACT_ADDRESS = "0xF9a89301ecc009f1D6d769Af4D18deb67D761ad6";
+// Contract address on Base Sepolia (v6 with sticky messages, 0.0005 ETH base price)
+export const CONTRACT_ADDRESS = "0x1C89997a8643A8E380305F0078BB8210e3952e1C";
 
-// Price: 0.001 ETH
-export const PRICE_WEI = 1000000000000000n;
+// Price: 0.0005 ETH
+export const PRICE_WEI = 500000000000000n;
+
+// Sticky price: 0.005 ETH (10x regular)
+export const STICKY_PRICE_WEI = 5000000000000000n;
 
 // Constants matching contract
 export const MAX_MESSAGE_LENGTH = 120;
