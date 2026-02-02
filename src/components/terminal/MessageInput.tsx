@@ -128,13 +128,16 @@ export default function MessageInput({
       </div>
 
       {/* Sticky toggle */}
-      <label className="flex items-center gap-2 cursor-pointer">
+      <label className="flex items-center gap-3 cursor-pointer select-none">
+        <div className={`w-5 h-5 border-2 flex items-center justify-center ${isSticky ? "border-[var(--ansi-yellow)] bg-[var(--ansi-yellow)]" : "border-terminal-system"}`}>
+          {isSticky && <span className="text-black text-xs font-bold">✓</span>}
+        </div>
         <input
           type="checkbox"
           checked={isSticky}
           onChange={(e) => setIsSticky(e.target.checked)}
           disabled={disabled || isLoading}
-          className="w-4 h-4 accent-[var(--ansi-yellow)]"
+          className="sr-only"
         />
         <span className={`font-mono text-xs ${isSticky ? "text-[var(--ansi-yellow)]" : "text-terminal-system"}`}>
           Sticky (0.005 ETH) - pins to top of feed

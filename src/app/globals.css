@@ -10,12 +10,12 @@
 
 :root {
   /* Terminal Colors */
-  --terminal-bg: #000000;
+  --terminal-bg: #1a1a1a;
   --terminal-text: #C0C0C0;
   --terminal-system: #808080;
   --terminal-header: #FFFFFF;
   --terminal-border: #3a3a3a;
-  --terminal-input-bg: #000000;
+  --terminal-input-bg: #1a1a1a;
 
   /* Username green color from design */
   --username-green: #00FF00;
@@ -30,7 +30,7 @@
   --ansi-orange: #FFA500;
 
   /* Base */
-  --background: #000000;
+  --background: #1a1a1a;
   --foreground: #C0C0C0;
   --radius: 0.75rem;
 }
