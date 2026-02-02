@@ -16,12 +16,14 @@ export default function FeedView({ count = 15, compact = false, showRefresh = tr
     abi: PUBLIC_TERMINAL_ABI,
     functionName: "getRecentMessages",
     args: [BigInt(count)],
+    chainId: 8453, // Always read from Base mainnet
   });
 
   const { data: pinnedMessage } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: PUBLIC_TERMINAL_ABI,
     functionName: "getPinnedMessage",
+    chainId: 8453, // Always read from Base mainnet
   });
 
   const pinned = pinnedMessage as Message | undefined;

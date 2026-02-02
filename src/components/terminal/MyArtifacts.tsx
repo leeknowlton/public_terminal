@@ -13,13 +13,14 @@ interface MyArtifactsProps {
 export default function MyArtifacts({ fid, address }: MyArtifactsProps) {
   const [userMessages, setUserMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({ chainId: 8453 });
 
   const { data: balance } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: PUBLIC_TERMINAL_ABI,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
+    chainId: 8453, // Always read from Base mainnet
     query: {
       enabled: !!address,
     },
@@ -29,6 +30,7 @@ export default function MyArtifacts({ fid, address }: MyArtifactsProps) {
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: PUBLIC_TERMINAL_ABI,
     functionName: "totalSupply",
+    chainId: 8453, // Always read from Base mainnet
   });
 
   useEffect(() => {

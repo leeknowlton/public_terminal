@@ -38,7 +38,7 @@ export default function App() {
   const { connect, connectors } = useConnect();
   const { writeContractAsync } = useWriteContract();
   const { switchChainAsync } = useSwitchChain();
-  const publicClient = usePublicClient();
+  const publicClient = usePublicClient({ chainId: BASE_CHAIN_ID });
 
   const [currentView, setCurrentView] = useState<View>(View.Mint);
   const [isMinting, setIsMinting] = useState(false);
@@ -83,6 +83,7 @@ export default function App() {
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: PUBLIC_TERMINAL_ABI,
     functionName: "getMessageCount",
+    chainId: BASE_CHAIN_ID, // Always read from Base mainnet
   });
 
   // Get user's color from contract
@@ -91,6 +92,7 @@ export default function App() {
     abi: PUBLIC_TERMINAL_ABI,
     functionName: "getColorForFid",
     args: [BigInt(context?.user?.fid || 0)],
+    chainId: BASE_CHAIN_ID, // Always read from Base mainnet
   });
 
   // Update user color when data is fetched
