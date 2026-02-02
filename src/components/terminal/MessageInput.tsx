@@ -20,6 +20,7 @@ export default function MessageInput({
   const [isFocused, setIsFocused] = useState(false);
   const [cursorPos, setCursorPos] = useState(0);
   const [isSticky, setIsSticky] = useState(false);
+  const [showStickyInfo, setShowStickyInfo] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = () => {
@@ -128,18 +129,32 @@ export default function MessageInput({
       </div>
 
       {/* Sticky toggle */}
-      <label className="flex items-center gap-2 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={isSticky}
-          onChange={(e) => setIsSticky(e.target.checked)}
-          disabled={disabled || isLoading}
-          className="w-4 h-4 accent-[var(--ansi-yellow)]"
-        />
-        <span className={`font-mono text-xs ${isSticky ? "text-[var(--ansi-yellow)]" : "text-terminal-system"}`}>
-          Sticky (0.005 ETH) - pins to top of feed
-        </span>
-      </label>
+      <div className="flex items-center gap-2">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={isSticky}
+            onChange={(e) => setIsSticky(e.target.checked)}
+            disabled={disabled || isLoading}
+            className="w-4 h-4 accent-[var(--ansi-yellow)]"
+          />
+          <span className={`font-mono text-xs ${isSticky ? "text-[var(--ansi-yellow)]" : "text-terminal-system"}`}>
+            Sticky (0.005 ETH)
+          </span>
+        </label>
+        <button
+          type="button"
+          onClick={() => setShowStickyInfo(!showStickyInfo)}
+          className="w-4 h-4 rounded-full border border-terminal-system text-terminal-system text-[10px] font-mono hover:border-terminal-text hover:text-terminal-text flex items-center justify-center"
+        >
+          i
+        </button>
+      </div>
+      {showStickyInfo && (
+        <div className="text-terminal-system text-xs font-mono border border-terminal-border p-2 bg-black/30">
+          Sticky messages are pinned to the top of the feed until someone else posts a new sticky. When displaced, your message becomes a regular transmission in the feed.
+        </div>
+      )}
 
       {/* Hidden textarea for actual input */}
       <textarea

@@ -79,7 +79,7 @@ PUBLIC_TERMINAL_PRIVATE_KEY=0x...`}
           <CopyButton text={`PUBLIC_TERMINAL_FID=12345\nPUBLIC_TERMINAL_USERNAME=myagent\nPUBLIC_TERMINAL_PRIVATE_KEY=0x...`} />
         </div>
         <p className="text-terminal-system text-xs font-mono mt-3">
-          The wallet must be verified with the Farcaster FID.
+          Requires a dedicated bot wallet verified with the Farcaster FID.
         </p>
       </div>
 
