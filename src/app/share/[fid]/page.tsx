@@ -19,11 +19,13 @@ export async function generateMetadata({
   const queryParams = await searchParams;
 
   const total = typeof queryParams.total === "string" ? queryParams.total : undefined;
+  const cacheBuster = typeof queryParams.t === "string" ? queryParams.t : Date.now().toString();
 
   // Build OG image URL - endpoint fetches feed context from contract
   const ogParams = new URLSearchParams();
   ogParams.set("tokenId", tokenId);
   if (total) ogParams.set("total", total);
+  ogParams.set("t", cacheBuster); // Cache buster for fresh OG image
 
   const ogImageUrl = `${APP_URL}/api/opengraph-image/mint?${ogParams.toString()}`;
   const shareUrl = `${APP_URL}/share/${tokenId}`;

@@ -254,6 +254,8 @@ export default function App() {
 
     const shareParams = new URLSearchParams();
     if (actualTotal) shareParams.set("total", actualTotal.toString());
+    // Add cache buster to force fresh OG image fetch
+    shareParams.set("t", Date.now().toString());
     const shareUrl = `${window.location.origin}/share/${tokenId}?${shareParams.toString()}`;
 
     // Fetch previous posters to tag them
