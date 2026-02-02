@@ -5,7 +5,7 @@ import { MAX_MESSAGE_LENGTH } from "~/lib/contractABI";
 
 interface MessageInputProps {
   username: string;
-  onSubmit: (text: string) => void;
+  onSubmit: (text: string, isSticky: boolean) => void;
   disabled?: boolean;
   isLoading?: boolean;
 }
@@ -19,11 +19,12 @@ export default function MessageInput({
   const [text, setText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [cursorPos, setCursorPos] = useState(0);
+  const [isSticky, setIsSticky] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = () => {
     if (text.trim() && !disabled && !isLoading) {
-      onSubmit(text.trim());
+      onSubmit(text.trim(), isSticky);
     }
   };
 
@@ -126,7 +127,19 @@ export default function MessageInput({
         )}
       </div>
 
-      {/* Sticky toggle - v2 feature */}
+      {/* Sticky toggle */}
+      <label className="flex items-center gap-2 cursor-pointer">
+        <input
+          type="checkbox"
+          checked={isSticky}
+          onChange={(e) => setIsSticky(e.target.checked)}
+          disabled={disabled || isLoading}
+          className="w-4 h-4 accent-[var(--ansi-yellow)]"
+        />
+        <span className={`font-mono text-xs ${isSticky ? "text-[var(--ansi-yellow)]" : "text-terminal-system"}`}>
+          Sticky (0.005 ETH) - pins to top of feed
+        </span>
+      </label>
 
       {/* Hidden textarea for actual input */}
       <textarea
