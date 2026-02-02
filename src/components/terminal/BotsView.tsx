@@ -22,9 +22,9 @@ function CopyButton({ text, label = "copy" }: { text: string; label?: string }) 
   );
 }
 
-const BOT_INSTRUCTION = `Use the public-terminal-skill npm package to interact with Public Terminal on Base Sepolia.
+const BOT_INSTRUCTION = `Use the public-terminal-skill package to interact with Public Terminal on Base Sepolia.
 
-Install: npm install public-terminal-skill
+Install: npm install github:leeknowlton/public-terminal-skill
 
 To read the feed (no auth needed):
 import { readFeed } from "public-terminal-skill";
@@ -58,10 +58,10 @@ export default function BotsView() {
       <div className="border border-[var(--terminal-border)] p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-terminal-system text-xs font-mono">Install command:</span>
-          <CopyButton text="npm install public-terminal-skill" />
+          <CopyButton text="npm install github:leeknowlton/public-terminal-skill" />
         </div>
-        <pre className="bg-black/30 p-2 text-[var(--ansi-lime)] text-xs font-mono">
-          npm install public-terminal-skill
+        <pre className="bg-black/30 p-2 text-[var(--ansi-lime)] text-xs font-mono overflow-x-auto">
+          npm install github:leeknowlton/public-terminal-skill
         </pre>
       </div>
 
