@@ -73,11 +73,11 @@ export async function GET(request: NextRequest) {
   // If we have a tokenId, fetch surrounding messages for feed context
   if (tokenId) {
     const targetId = BigInt(tokenId);
-    // Fetch 7 messages: 3 before, target, 3 after
+    // Fetch 5 messages: 2 before, target, 2 after
     const ids = [
-      targetId - 3n, targetId - 2n, targetId - 1n,
+      targetId - 2n, targetId - 1n,
       targetId,
-      targetId + 1n, targetId + 2n, targetId + 3n
+      targetId + 1n, targetId + 2n
     ].filter(id => id >= 1n);
 
     // Fetch messages in parallel using multicall
@@ -143,14 +143,14 @@ export async function GET(request: NextRequest) {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: 24,
+                marginBottom: 30,
               }}
             >
               <div
                 style={{
                   display: "flex",
                   color: "#FFFFFF",
-                  fontSize: 36,
+                  fontSize: 48,
                   fontWeight: "bold",
                   fontStyle: "italic",
                 }}
@@ -162,7 +162,7 @@ export async function GET(request: NextRequest) {
                   style={{
                     display: "flex",
                     color: "#808080",
-                    fontSize: 24,
+                    fontSize: 32,
                   }}
                 >
                   {`#${tokenId} of ${total}`}
@@ -175,12 +175,12 @@ export async function GET(request: NextRequest) {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 8,
+                gap: 12,
                 flex: 1,
                 overflow: "hidden",
               }}
             >
-              {feedMessages.slice(0, 7).map((msg) => {
+              {feedMessages.slice(0, 5).map((msg) => {
                 const isHighlighted = msg.id === targetId;
                 return (
                   <div
@@ -200,7 +200,7 @@ export async function GET(request: NextRequest) {
                       <span
                         style={{
                           color: msg.color,
-                          fontSize: 36,
+                          fontSize: 48,
                           fontWeight: "bold",
                         }}
                       >
@@ -209,11 +209,11 @@ export async function GET(request: NextRequest) {
                       <span
                         style={{
                           color: isHighlighted ? "#E0E0E0" : "#A0A0A0",
-                          fontSize: 36,
-                          marginLeft: 10,
+                          fontSize: 48,
+                          marginLeft: 12,
                         }}
                       >
-                        {msg.text.length > 70 ? msg.text.slice(0, 70) + "..." : msg.text}
+                        {msg.text.length > 50 ? msg.text.slice(0, 50) + "..." : msg.text}
                       </span>
                     </div>
                   </div>
@@ -226,8 +226,8 @@ export async function GET(request: NextRequest) {
               style={{
                 display: "flex",
                 color: "#808080",
-                fontSize: 20,
-                marginTop: 16,
+                fontSize: 28,
+                marginTop: 20,
               }}
             >
               Permanent on-chain transmissions on Base
