@@ -430,6 +430,36 @@ export default function App() {
                           <p className="text-terminal-system text-xs font-mono uppercase tracking-wider">
                             Recent Transmissions
                           </p>
+                          <div className="flex gap-3">
+                            <button
+                              onClick={() => setFeedKey(k => k + 1)}
+                              className="text-terminal-system text-xs font-mono hover:text-terminal-text"
+                            >
+                              [refresh]
+                            </button>
+                            <button
+                              onClick={async () => {
+                                const shareUrl = `${window.location.origin}?t=${Date.now()}`;
+                                const castText = "Check out the latest transmissions on PUBLIC_TERMINAL";
+                                try {
+                                  if (actions?.composeCast) {
+                                    await actions.composeCast({
+                                      text: castText,
+                                      embeds: [shareUrl],
+                                    });
+                                  } else {
+                                    const warpcastUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(shareUrl)}`;
+                                    window.open(warpcastUrl, "_blank");
+                                  }
+                                } catch (err) {
+                                  console.error("Share failed:", err);
+                                }
+                              }}
+                              className="text-terminal-system text-xs font-mono hover:text-terminal-text"
+                            >
+                              [share]
+                            </button>
+                          </div>
                         </div>
                         <FeedView key={feedKey} count={5} showRefresh={false} />
                       </div>
