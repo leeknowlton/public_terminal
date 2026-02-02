@@ -130,6 +130,15 @@ export default function App() {
   const fid = context?.user?.fid || 0;
   const isOnCorrectChain = chainId === BASE_CHAIN_ID;
 
+  // Auto-switch to Base when connected on wrong chain
+  useEffect(() => {
+    if (isConnected && chainId && chainId !== BASE_CHAIN_ID) {
+      switchChainAsync({ chainId: BASE_CHAIN_ID }).catch((err) => {
+        console.error("Auto-switch to Base failed:", err);
+      });
+    }
+  }, [isConnected, chainId, switchChainAsync]);
+
   const handleMint = async (text: string, isPinned: boolean = false) => {
     if (!isConnected || !address) {
       setError("Please connect your wallet first");
@@ -399,9 +408,18 @@ export default function App() {
                       )}
 
                       {isConnected && !isOnCorrectChain && (
-                        <p className="text-[var(--ansi-yellow)] text-xs font-mono">
-                          Please switch to Base network
-                        </p>
+                        <button
+                          onClick={async () => {
+                            try {
+                              await switchChainAsync({ chainId: BASE_CHAIN_ID });
+                            } catch (err) {
+                              console.error("Failed to switch chain:", err);
+                            }
+                          }}
+                          className="text-[var(--ansi-yellow)] text-xs font-mono underline hover:text-[var(--ansi-lime)]"
+                        >
+                          Click to switch to Base network
+                        </button>
                       )}
 
                       {/* Recent Transmissions - shows the feed inline */}
