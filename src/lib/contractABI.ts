@@ -55,10 +55,10 @@ export const PUBLIC_TERMINAL_ABI = [
     stateMutability: "payable",
   },
 
-  // Sticky mint function
+  // Pin mint function
   {
     type: "function",
-    name: "mintSticky",
+    name: "mintPin",
     inputs: [
       { name: "fid", type: "uint256" },
       { name: "username", type: "string" },
@@ -119,10 +119,10 @@ export const PUBLIC_TERMINAL_ABI = [
     outputs: [{ name: "", type: "uint256" }],
     stateMutability: "view",
   },
-  // Get sticky message
+  // Get pinned message
   {
     type: "function",
-    name: "getStickyMessage",
+    name: "getPinnedMessage",
     inputs: [],
     outputs: [
       {
@@ -229,10 +229,10 @@ export const PUBLIC_TERMINAL_ABI = [
       { name: "_toTokenId", type: "uint256", indexed: false },
     ],
   },
-  // Sticky message event
+  // Pin message event
   {
     type: "event",
-    name: "StickySet",
+    name: "PinSet",
     inputs: [
       { name: "tokenId", type: "uint256", indexed: true },
       { name: "previousTokenId", type: "uint256", indexed: true },
@@ -240,8 +240,8 @@ export const PUBLIC_TERMINAL_ABI = [
   },
 ] as const;
 
-// Contract address on Base Sepolia (v6 with sticky messages, 0.0005 ETH base price)
-export const CONTRACT_ADDRESS = "0x1C89997a8643A8E380305F0078BB8210e3952e1C";
+// Contract address on Base Sepolia (v7 with pin messages, 0.0005 ETH base price)
+export const CONTRACT_ADDRESS = "0xA0531536778616c856199A089170d95826B4070a";
 
 // Price: 0.0005 ETH
 export const PRICE_WEI = 500000000000000n;

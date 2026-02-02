@@ -21,7 +21,7 @@ export default function FeedView({ count = 15, compact = false, showRefresh = tr
   const { data: pinnedMessage } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: PUBLIC_TERMINAL_ABI,
-    functionName: "getStickyMessage",
+    functionName: "getPinnedMessage",
   });
 
   const pinned = pinnedMessage as Message | undefined;

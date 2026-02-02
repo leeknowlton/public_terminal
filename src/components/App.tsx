@@ -155,7 +155,7 @@ export default function App() {
     setMintedText(text);
 
     const mintPrice = isPinned ? PIN_PRICE_WEI : PRICE_WEI;
-    const mintFunction = isPinned ? "mintSticky" : "mint";
+    const mintFunction = isPinned ? "mintPin" : "mint";
 
     try {
       // Get signature from backend
